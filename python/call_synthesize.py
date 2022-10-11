@@ -11,7 +11,13 @@ def call_synthesize(args, text):
     audio_encoding = get_audio_encoding(args)
     out_path = create_out_path(args, audio_encoding)
 
-    channel = create_channel(args.service, args.tls_directory)
+    if args.tls_directory:
+        channel = create_channel(args.service, args.tls_directory)
+    elif hasattr(args, 'root_certificates') and args.root_certificates:
+        channel = grpc.secure_channel(args.service, grpc.ssl_channel_credentials(args.root_certificates, args.private_key, args.certificate_chain))
+    else:
+        channel = grpc.insecure_channel(args.service)
+
     stub = techmo_tts_pb2_grpc.TTSStub(channel)
 
     config = techmo_tts_pb2.SynthesizeConfig(

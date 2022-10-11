@@ -1,9 +1,14 @@
+import logging
 import os
 import grpc
 
 
 def create_channel(address, tls_directory):
     if not tls_directory:
+        return grpc.insecure_channel(address)
+
+    if not os.path.isdir(tls_directory):
+        logging.error(f'TLS directory {tls_directory} not exists')
         return grpc.insecure_channel(address)
 
     def read_file(path):
