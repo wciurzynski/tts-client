@@ -1,3 +1,5 @@
+import logging
+
 import techmo_tts_pb2
 import techmo_tts_pb2_grpc
 import grpc
@@ -57,7 +59,7 @@ def call_synthesize(args, text):
             raise RuntimeError("Unsupported response type: " + args.response)
         audioSaver.save(out_path)
     except grpc.RpcError as e:
-        print("[Server-side error] Received following RPC error from the TTS service:", str(e))
+        logging.error("[Server-side error] Received following RPC error from the TTS service:", str(e))
     finally:
         if args.play:
             audioPlayer.stop()
