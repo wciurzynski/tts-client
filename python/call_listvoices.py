@@ -21,7 +21,7 @@ def call_listvoices(args):
 
     try:
         response = stub.ListVoices(request, timeout=timeout, metadata=metadata)
-        logging.debug(response)
+        print(response)
 
     except grpc.RpcError as e:
         logging.error("[Server-side error] Received following RPC error from the TTS service:", str(e))
