@@ -50,7 +50,15 @@ def get_voice_list(args):
     try:
         response = stub.ListVoices(request, timeout=timeout, metadata=metadata)
         for voice in response.voices:
-            voice_list.append(voice.voice.name)
+            for lang in voice.supported_languages:
+                voice_list.append(
+                    {
+                        'code': lang,
+                        'name': voice.voice.name,
+                        # 'gender': voice.voice.gender,
+                        # 'voice_age': voice.voice.age,
+                    }
+                )
 
     except grpc.RpcError as e:
         logging.error("[Server-side error] Received following RPC error from the TTS service:", str(e))
